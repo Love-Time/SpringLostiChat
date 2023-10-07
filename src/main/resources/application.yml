@@ -1,0 +1,12 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${KEYCLOAK_HOST:localhost}:8080/realms/my-demo-main-realm
+
+jwt:
+  auth:
+    converter:
+      resource-id: my-demo
+      principal-attribute: preferred_username
