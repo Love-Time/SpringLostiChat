@@ -23,6 +23,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Objects;
+
 import io.jsonwebtoken.security.SignatureException;
 
 @Component
@@ -38,9 +40,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NotNull HttpServletResponse response,
             @NotNull FilterChain filterChain)
             throws ServletException, IOException {
-        final String authHeaders = request.getHeader("Authorization");
+
+        String authHeaders = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        if (Objects.equals(request.getRequestURI(), "/chat")){
+            String tokenParam = request.getParameter("token");
+            if (Objects.equals(tokenParam, "")){
+                System.out.println("HEREEEEEE");
+                Writer writer = response.getWriter();
+                response.setStatus(403);
+                writer.write("{'errors': 'token should not be null'}");
+                writer.flush();
+                return;
+            }
+            authHeaders = "Bearer " + tokenParam;
+        }
+
         if (authHeaders == null || !authHeaders.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -68,14 +84,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (ExpiredJwtException e) {
             Writer writer = response.getWriter();
-            response.setStatus(400);
+            response.setStatus(403);
             writer.write("{'errors': 'token expired'}");
             writer.flush();
 
         } catch (JwtException | UsernameNotFoundException e)
         {
             Writer writer = response.getWriter();
-            response.setStatus(400);
+            response.setStatus(403);
             writer.write("{'errors': 'token invalid'}");
             writer.flush();
 
