@@ -40,7 +40,7 @@ public class DialogController {
         }
 
         User user = (User) authentication.getPrincipal();
-        return new ResponseEntity<>(dialogService.addDialog(dto, user), HttpStatus.OK);
+        return new ResponseEntity<>(dialogService.addDialogAndGetDto(dto, user), HttpStatus.OK);
     }
 
 

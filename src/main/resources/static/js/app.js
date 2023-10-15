@@ -8,9 +8,10 @@ const stompClient = new StompJs.Client({
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/greetings', (greeting) => {
-        showGreeting(JSON.parse(greeting.body).content);
-    });
+    // stompClient.subscribe('/topic/greetings', (greeting) => {
+    //     showGreeting(JSON.parse(greeting.body).content);
+    // });
+    stompClient.subscribe("/user/topic/private-messages");
 };
 
 stompClient.onWebSocketError = (error) => {
@@ -48,8 +49,8 @@ function disconnect() {
 
 function sendName() {
     stompClient.publish({
-        destination: "/app/hello",
-        body: JSON.stringify({'name': $("#name").val()})
+        destination: "/app/private-message",
+        body: JSON.stringify({'name': $("#name").val(), "to": $("#to").val() })
     });
 
 }

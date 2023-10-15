@@ -29,19 +29,20 @@ public class JwtService {
     }
 
 
-    public  String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public  String generateToken(UserDetails userDetails, Long milliseconds){
+        return generateToken(new HashMap<>(), userDetails, milliseconds);
     }
     public  String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            Long milliseconds
     ){
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + milliseconds))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

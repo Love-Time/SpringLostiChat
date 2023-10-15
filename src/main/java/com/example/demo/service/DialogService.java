@@ -46,7 +46,7 @@ public class DialogService {
         return DialogMapper.INSTANCE.toDto(message);
     }
 
-    public DialogDto addDialog(DialogDtoRequest dto, User user) {
+    public Dialog addDialogAndGet(DialogDtoRequest dto, User user) {
         Dialog dialog = DialogMapper.INSTANCE.fromDto(dto);
         dialog.setSender(user);
         User recipient = User.builder().id(dto.getRecipient_id())
@@ -55,6 +55,16 @@ public class DialogService {
         dialog.setDateTime(new Date());
         dialog.setIsRead(false);
         System.out.println(dialog);
+        return repository.save(dialog);
+    }
+    public DialogDto addDialogAndGetDto(DialogDtoRequest dto, User user){
+        Dialog dialog = addDialogAndGet(dto, user);
+        return this.toDto(dialog);
+    }
+
+    public DialogDto toDto(Dialog dialog){
         return DialogMapper.INSTANCE.toDto(repository.save(dialog));
     }
+
+
 }

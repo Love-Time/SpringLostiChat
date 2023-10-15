@@ -16,8 +16,10 @@ import java.util.PrimitiveIterator;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-
-    private String token;
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private String accessToken;
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private String refreshToken;
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private Map<String, String> errors;
 }
