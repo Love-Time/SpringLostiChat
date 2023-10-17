@@ -21,17 +21,15 @@ public class FriendService {
     private FriendRepository repository;
     @Autowired
     private UserRepository userRepository;
-    
-    public List<UserDto> findMyFriends(Long id){
+
+    public List<UserDto> findMyFriends(Long id) {
         List<Friend> friends = repository.findByFirstUserIdOrSecondUserId(id, id);
         List<User> response = new ArrayList<>();
-        for (Friend friend: friends) {
-            if (Objects.equals(friend.getFirstUser().getId(), id))
-            {
+        for (Friend friend : friends) {
+            if (Objects.equals(friend.getFirstUser().getId(), id)) {
                 response.add(friend.getSecondUser());
-            }
-            else {
-            response.add(friend.getFirstUser());
+            } else {
+                response.add(friend.getFirstUser());
             }
         }
         return UserMapper.INSTANCE.toDto(response);
@@ -44,9 +42,9 @@ public class FriendService {
 
     public FriendAccept addFriend(User user, Long friendId) throws Exception {
         Friend friend = repository.findFriend(user.getId(), friendId).orElse(null);
-        if (friend==null){ //Отправка запроса в друзья
+        if (friend == null) { //Отправка запроса в друзья
             User friendUser = userRepository.findById(friendId).orElse(null);
-            if (friendUser==null){
+            if (friendUser == null) {
                 throw new Exception("friend should be exists");
             }
             Friend newFriend = Friend.builder()
@@ -66,7 +64,7 @@ public class FriendService {
             return FriendAccept.ACCEPT;
 
         } else if (friend.getStatus() == FriendAccept.DENY) {
-            if (Objects.equals(friend.getSecondUser(),user)){
+            if (Objects.equals(friend.getSecondUser(), user)) {
                 friend.setStatus(FriendAccept.ACCEPT);
                 //Мы передумали и приняли запрос в друзья
                 //Добавить в уведомления
@@ -74,5 +72,51 @@ public class FriendService {
             }
         }
         return null; //Нельзя это сделать, вам уже отказали или он ваш друг
+    }
+
+    public List<UserDto> findFriendRequests(Long id) {
+        List<Friend> requests = repository.findFriendBySecondUserIdAndStatus(id, FriendAccept.WAIT);
+        List<User> response = new ArrayList<>();
+
+        for (Friend friend : requests) {
+            response.add(friend.getFirstUser());
+        }
+
+        return UserMapper.INSTANCE.toDto(response);
+
+    }
+
+    public List<UserDto> findActiveMyRequests(Long id) {
+        List<Friend> requests = repository.findFriendByFirstUserIdAndStatus(id, FriendAccept.WAIT);
+        List<User> response = new ArrayList<>();
+
+        for (Friend friend : requests) {
+            response.add(friend.getSecondUser());
+        }
+
+        return UserMapper.INSTANCE.toDto(response);
+
+    }
+
+    public List<UserDto> findDenyRequests(Long id) {
+        List<Friend> requests = repository.findFriendBySecondUserIdAndStatus(id, FriendAccept.DENY);
+        List<User> response = new ArrayList<>();
+
+        for (Friend friend : requests) {
+            response.add(friend.getSecondUser());
+        }
+
+        return UserMapper.INSTANCE.toDto(response);
+    }
+
+    public List<UserDto> findDenyMyeRequests(Long id) {
+        List<Friend> requests = repository.findFriendByFirstUserIdAndStatus(id, FriendAccept.DENY);
+        List<User> response = new ArrayList<>();
+
+        for (Friend friend : requests) {
+            response.add(friend.getSecondUser());
+        }
+
+        return UserMapper.INSTANCE.toDto(response);
     }
 }

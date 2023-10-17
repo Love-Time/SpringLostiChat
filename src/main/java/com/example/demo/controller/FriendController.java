@@ -31,6 +31,30 @@ public class FriendController {
         User user = (User)authentication.getPrincipal();
         return new ResponseEntity<>(service.findMyFriends(user.getId()), HttpStatus.OK);
     }
+
+    @GetMapping("/requests")
+    public ResponseEntity<List<UserDto>> getRequests(Authentication authentication){
+        User user = (User)authentication.getPrincipal();
+        return new ResponseEntity<>(service.findFriendRequests(user.getId()), HttpStatus.OK);
+    }
+    @GetMapping("/myActiveRequests")
+    public ResponseEntity<List<UserDto>> getActiveMyRequests(Authentication authentication){
+        User user = (User)authentication.getPrincipal();
+        return new ResponseEntity<>(service.findActiveMyRequests(user.getId()), HttpStatus.OK);
+    }
+
+    @GetMapping("/DenyRequests")
+    public ResponseEntity<List<UserDto>> getDenyRequests(Authentication authentication){
+        User user = (User)authentication.getPrincipal();
+        return new ResponseEntity<>(service.findDenyRequests(user.getId()), HttpStatus.OK);
+    }
+
+    @GetMapping("/MyDenyRequests")
+    public ResponseEntity<List<UserDto>> getDenyMyRequests(Authentication authentication){
+        User user = (User)authentication.getPrincipal();
+        return new ResponseEntity<>(service.findDenyMyeRequests(user.getId()), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/isFriend")
     public ResponseEntity<Boolean> IsHeMyFriend(@PathVariable Long id, Authentication authentication){
         User user = (User)authentication.getPrincipal();
@@ -65,6 +89,7 @@ public class FriendController {
         return new ResponseEntity<>(friendDto, HttpStatus.OK);
     }
 
+    //Отказ на заявку или удаление из друзей
 
 
 }
