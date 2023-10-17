@@ -4,6 +4,8 @@ public enum FriendAccept {
     ACCEPT,
     DENY,
     WAIT,
-    SEND
+    SEND,
+
+    DELETE
 }
 

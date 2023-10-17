@@ -8,6 +8,7 @@ import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.FriendRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -118,5 +119,26 @@ public class FriendService {
         }
 
         return UserMapper.INSTANCE.toDto(response);
+    }
+
+    public FriendAccept denyFriend(User user, Long id) {
+        Friend friend = repository.findFriend(user.getId(), id).orElse(null);
+        if (friend == null) {
+            return null; //Некому отклонять запрос, запроса нет
+        }
+        if (friend.getStatus() == FriendAccept.ACCEPT)
+        {
+            repository.delete(friend);
+            //Сообщить второму, что первый удалил его из друзей
+            return FriendAccept.DELETE;
+
+        }
+        if (friend.getStatus() == FriendAccept.WAIT && Objects.equals(friend.getSecondUser().getId(), user.getId())){
+            friend.setStatus(FriendAccept.DENY);
+            //Сообщить второму что первый отклонил его заявку
+            return FriendAccept.DENY;
+        }
+        return null; //Остальные случаи, ничего делать не надо
+
     }
 }

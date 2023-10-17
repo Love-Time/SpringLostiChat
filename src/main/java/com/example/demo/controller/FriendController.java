@@ -90,6 +90,24 @@ public class FriendController {
     }
 
     //Отказ на заявку или удаление из друзей
+    @DeleteMapping("/{id}/deny")
+    public ResponseEntity<FriendDto> denyFriend(@PathVariable Long id, Authentication authentication){
+        User user = (User)authentication.getPrincipal();
+        FriendAccept status = service.denyFriend(user, id);
+        if (status == null){
 
+            Map<String, String> errors = new HashMap<>();
+            errors.put("status", "You cant do it!");
+            FriendDto friendDto = FriendDto.builder()
+                    .errors(errors)
+                    .build();
+            return new ResponseEntity<>(friendDto, HttpStatus.BAD_REQUEST);
+        }
 
+        FriendDto friendDto = FriendDto.builder()
+                .status(status)
+                .build();
+
+        return new ResponseEntity<>(friendDto, HttpStatus.OK);
+    }
 }
