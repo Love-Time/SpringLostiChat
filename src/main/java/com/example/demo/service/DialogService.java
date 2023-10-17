@@ -66,4 +66,7 @@ public class DialogService {
     }
 
 
+    public List<DialogDto> findMessagesWithUserById(Long id) {
+        return DialogMapper.INSTANCE.toDto(repository.findDialogsBySenderIdOrRecipientId(id, id));
+    }
 }

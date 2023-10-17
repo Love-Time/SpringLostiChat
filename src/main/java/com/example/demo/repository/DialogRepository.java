@@ -17,4 +17,6 @@ public interface DialogRepository extends JpaRepository<Dialog, Long> {
             + "ORDER BY date_time DESC", nativeQuery = true)
     List<Dialog> findDialogsByUserId(@Param("userId") Long userId);
 
+    List<Dialog> findDialogsBySenderIdOrRecipientId(Long sender_id, Long recipient_id);
+
 }

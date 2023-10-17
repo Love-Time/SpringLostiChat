@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.advice.Response;
 import com.example.demo.dto.dialog.DialogDto;
 import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.User;
@@ -40,6 +41,11 @@ public class DialogController {
 
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(dialogService.addDialogAndGetDto(dto, user), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<DialogDto>> getMessagesWithUser(@PathVariable Long id){
+        return new ResponseEntity<>(dialogService.findMessagesWithUserById(id), HttpStatus.OK);
     }
 
 
