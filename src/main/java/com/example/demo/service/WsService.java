@@ -1,10 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserDto;
-import com.example.demo.dto.dialog.DialogDto;
 import com.example.demo.entity.Dialog;
-import com.example.demo.entity.User;
-import com.example.demo.entity.temp.Greeting;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

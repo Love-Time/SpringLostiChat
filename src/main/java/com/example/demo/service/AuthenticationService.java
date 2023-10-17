@@ -1,6 +1,8 @@
-package com.example.demo.auth;
+package com.example.demo.service;
 
-import com.example.demo.config.JwtService;
+import com.example.demo.dto.authentication.AuthenticationRequestDto;
+import com.example.demo.dto.authentication.AuthenticationResponseDto;
+import com.example.demo.dto.authentication.AuthenticationRegisterRequestDto;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
@@ -9,8 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +22,16 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
 
-    private AuthenticationResponse getAuthenticationResponse(User user){
+    private AuthenticationResponseDto getAuthenticationResponse(User user){
         String accessToken = jwtService.generateToken(user, 300000L);
         String refreshToken = jwtService.generateToken(user, 2592000000L);
 
-        return AuthenticationResponse.builder()
+        return AuthenticationResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponseDto register(AuthenticationRegisterRequestDto request) {
         User user = User.builder()
                 .firstName(request.getFirstname())
                 .lastName(request.getLastname())
@@ -42,7 +42,7 @@ public class AuthenticationService {
         repository.save(user);
         return this.getAuthenticationResponse(user);
     }
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

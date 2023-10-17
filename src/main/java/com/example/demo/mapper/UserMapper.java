@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.UserDto;
-import com.example.demo.dto.UserDtoResponse;
+import com.example.demo.dto.user.UserDto;
+import com.example.demo.dto.user.UserResponseDto;
 import com.example.demo.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +16,7 @@ public interface UserMapper {
     List<UserDto> toDto(List<User> users);
 
     User fromDto(UserDto dto);
-    User fromDto(UserDtoResponse dto);
+    User fromDto(UserResponseDto dto);
 
 
 }

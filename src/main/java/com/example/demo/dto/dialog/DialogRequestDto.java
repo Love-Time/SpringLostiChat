@@ -1,14 +1,13 @@
 package com.example.demo.dto.dialog;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.dialog.DialogDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
-public class DialogDtoRequest {
+public class DialogRequestDto {
     @NotNull(message = "recipient should not be empty")
     private Long recipient_id;
     private String message;

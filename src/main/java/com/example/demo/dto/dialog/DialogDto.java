@@ -1,6 +1,6 @@
 package com.example.demo.dto.dialog;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 

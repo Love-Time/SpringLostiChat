@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.auth.AuthenticationResponse;
-import com.example.demo.dto.ChangePasswordDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.ChangePasswordDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")
@@ -72,7 +72,7 @@ public class UserController {
         }
         User user = (User)authentication.getPrincipal();
 
-        if (passwordEncoder.encode(passwordDto.getOldPassword()) != user.getPassword()){
+        if (!Objects.equals(passwordEncoder.encode(passwordDto.getOldPassword()), user.getPassword())){
             UserDto userDto = new UserDto();
             Map<String, String> errors = new HashMap<>();
             errors.put("oldPassword", "oldPassword must match the current password");

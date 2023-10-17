@@ -17,12 +17,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class DialogRepositoryTest {
-    @Mock
+    @Autowired
     private UserRepository userRepository;
 
-    @Mock
+    @Autowired
     private DialogRepository dialogRepository;
 
     @Test
@@ -63,12 +63,14 @@ public class DialogRepositoryTest {
                 .build();
         Dialog dialog3 = dialogRepository.save(dialog1);
         Dialog dialog4 = dialogRepository.save(dialog2);
+        System.out.println(dialog3);
 
-        List<Dialog> provided = dialogRepository.findDialogsByUserId(user1.getId());
-        List<Dialog> excepted  = Arrays.asList(dialog3, dialog4);
+        List<Dialog> provided_dialogs = dialogRepository.findDialogsByUserId(user1.getId());
+        List<Long> provided= Arrays.asList(provided_dialogs.get(0).getId(), provided_dialogs.get(1).getId());
+        List<Long> expected  = Arrays.asList(dialog3.getId(), dialog4.getId());
 
 
-        Assertions.assertEquals(excepted, provided);
+        Assertions.assertEquals(expected, provided);
 
     }
 }

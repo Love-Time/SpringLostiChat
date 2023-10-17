@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
@@ -16,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {

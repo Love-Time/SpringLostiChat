@@ -1,16 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
-import com.example.demo.exception.IncorrectOldPasswordException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 

@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.dialog.DialogDto;
-import com.example.demo.dto.dialog.DialogDtoRequest;
+import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.Dialog;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -16,6 +16,6 @@ public interface DialogMapper {
 
     List<DialogDto> toDto(List<Dialog> dialog);
 
-    Dialog fromDto(DialogDtoRequest dialogDtoRequest);
+    Dialog fromDto(DialogRequestDto dialogDtoRequest);
 
 }

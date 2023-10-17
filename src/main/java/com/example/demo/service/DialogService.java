@@ -1,12 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.dialog.DialogDto;
-import com.example.demo.dto.dialog.DialogDtoRequest;
+import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.DialogMapper;
 import com.example.demo.repository.DialogRepository;
-import org.mapstruct.control.MappingControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,7 @@ public class DialogService {
         return DialogMapper.INSTANCE.toDto(message);
     }
 
-    public Dialog addDialogAndGet(DialogDtoRequest dto, User user) {
+    public Dialog addDialogAndGet(DialogRequestDto dto, User user) {
         Dialog dialog = DialogMapper.INSTANCE.fromDto(dto);
         dialog.setSender(user);
         User recipient = User.builder().id(dto.getRecipient_id())
@@ -57,7 +56,7 @@ public class DialogService {
         System.out.println(dialog);
         return repository.save(dialog);
     }
-    public DialogDto addDialogAndGetDto(DialogDtoRequest dto, User user){
+    public DialogDto addDialogAndGetDto(DialogRequestDto dto, User user){
         Dialog dialog = addDialogAndGet(dto, user);
         return this.toDto(dialog);
     }

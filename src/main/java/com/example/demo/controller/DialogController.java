@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.UserDto;
 import com.example.demo.dto.dialog.DialogDto;
-import com.example.demo.dto.dialog.DialogDtoRequest;
+import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.BindingErrorsService;
 import com.example.demo.service.DialogService;
@@ -31,7 +30,7 @@ public class DialogController {
 
     // Позже переделать на вебсокеты
     @PostMapping("")
-    public ResponseEntity<DialogDto> addDialog(@RequestBody @Valid DialogDtoRequest dto, BindingResult result, Authentication authentication){
+    public ResponseEntity<DialogDto> addDialog(@RequestBody @Valid DialogRequestDto dto, BindingResult result, Authentication authentication){
         System.out.println(result.hasErrors());
         if (result.hasErrors()) {
             DialogDto dialogDto = new DialogDto();
