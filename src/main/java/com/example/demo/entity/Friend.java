@@ -26,5 +26,5 @@ public class Friend {
     private User secondUser;
 
     @Enumerated(EnumType.STRING)
-    private FriendAccept status;
+    private FriendStatus status;
 }

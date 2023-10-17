@@ -4,7 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.friend.FriendAddRequestDto;
 import com.example.demo.dto.friend.FriendDto;
 import com.example.demo.dto.user.UserDto;
-import com.example.demo.entity.FriendAccept;
+import com.example.demo.entity.FriendStatus;
 import com.example.demo.entity.User;
 import com.example.demo.service.BindingErrorsService;
 import com.example.demo.service.FriendService;
@@ -52,7 +52,7 @@ public class FriendController {
     @GetMapping("/MyDenyRequests")
     public ResponseEntity<List<UserDto>> getDenyMyRequests(Authentication authentication){
         User user = (User)authentication.getPrincipal();
-        return new ResponseEntity<>(service.findDenyMyeRequests(user.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(service.findDenyMyRequests(user.getId()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/isFriend")
@@ -72,7 +72,7 @@ public class FriendController {
         }
 
         User user = (User)authentication.getPrincipal();
-        FriendAccept status = service.addFriend(user,friendAddRequestDto.getUserId());
+        FriendStatus status = service.addFriend(user,friendAddRequestDto.getUserId());
         if (status == null) {
             Map<String, String> errors = new HashMap<>();
             errors.put("status", "The friend request already exists. Either you are already friends, or he rejected your friend request");
@@ -93,7 +93,7 @@ public class FriendController {
     @DeleteMapping("/{id}/deny")
     public ResponseEntity<FriendDto> denyFriend(@PathVariable Long id, Authentication authentication){
         User user = (User)authentication.getPrincipal();
-        FriendAccept status = service.denyFriend(user, id);
+        FriendStatus status = service.denyFriend(user, id);
         if (status == null){
 
             Map<String, String> errors = new HashMap<>();

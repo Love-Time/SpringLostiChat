@@ -2,7 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Friend;
 
-import com.example.demo.entity.FriendAccept;
+import com.example.demo.entity.FriendStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,7 +26,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
             , nativeQuery = true)
     Optional<Friend> findFriend(@Param("MyId") Long myId, @Param("FriendId") Long FriendId);
 
-    List<Friend> findFriendBySecondUserIdAndStatus(Long secondUserId, FriendAccept status);
+    List<Friend> findFriendBySecondUserIdAndStatus(Long secondUserId, FriendStatus status);
 
-    List<Friend> findFriendByFirstUserIdAndStatus(Long secondUserId, FriendAccept status);
+    List<Friend> findFriendByFirstUserIdAndStatus(Long secondUserId, FriendStatus status);
 }

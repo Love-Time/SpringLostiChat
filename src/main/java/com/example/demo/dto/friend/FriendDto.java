@@ -1,7 +1,7 @@
 package com.example.demo.dto.friend;
 
 import com.example.demo.dto.user.UserResponseDto;
-import com.example.demo.entity.FriendAccept;
+import com.example.demo.entity.FriendStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +18,5 @@ public class FriendDto {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private Map<String, String> errors;
 
-    private FriendAccept status;
+    private FriendStatus status;
 }
