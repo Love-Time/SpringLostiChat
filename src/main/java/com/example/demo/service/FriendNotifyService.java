@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.FriendNotify;
 import com.example.demo.entity.FriendStatus;
 import com.example.demo.entity.User;
+import com.example.demo.mapper.FriendNotifyMapper;
 import com.example.demo.repository.FriendNotifyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,8 @@ public class FriendNotifyService {
                 .status(friendStatus)
                 .isRead(false)
                 .build();
-        //Оповестить по вебсокету, что отправлен запрос в друзья
-        //Добавить в уведомления
+
         repository.save(friendNotify);
-        wsService.notifyFriend(friendNotify, user.getUsername());
+        wsService.notifyFriend(FriendNotifyMapper.INSTANCE.toDto(friendNotify), user.getUsername());
     }
 }

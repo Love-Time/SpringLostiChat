@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.friend.FriendNotifyDto;
 import com.example.demo.entity.Dialog;
+import com.example.demo.entity.FriendNotify;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,7 +23,7 @@ public class WsService {
         simpMessagingTemplate.convertAndSendToUser(username, "/topic/private-messages", object);
     }
 
-    public void notifyFriend(Object object, String username){
-        simpMessagingTemplate.convertAndSendToUser(username, "/topic/friends", object);
+    public void notifyFriend(FriendNotifyDto dto, String username){
+        simpMessagingTemplate.convertAndSendToUser(username, "/topic/friends", dto);
     }
 }
