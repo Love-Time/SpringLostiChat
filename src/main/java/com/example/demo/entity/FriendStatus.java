@@ -5,7 +5,6 @@ public enum FriendStatus {
     DENY,
     WAIT,
     SEND,
-
     DELETE
 }
 

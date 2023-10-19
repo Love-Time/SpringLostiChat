@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.user.UserDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -41,15 +42,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void update(User newUser) {
+    public void update(UserDto newUser) {
         if (newUser.getFirstName() != null){
             this.setFirstName(newUser.getFirstName());
         }
         if (newUser.getLastName() != null){
             this.setLastName(newUser.getLastName());
-        }
-        if (newUser.getPassword() != null) {
-            this.setPassword(newUser.getPassword());
         }
     }
 

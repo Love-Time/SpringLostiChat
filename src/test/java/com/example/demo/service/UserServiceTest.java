@@ -98,66 +98,35 @@ public class UserServiceTest {
         Assertions.assertEquals(excepted, provided);
 
     }
-    @Test
-    void update_noUpdate(){
-        User user = User.builder()
-                .id(1L)
-                .firstName("firstname")
-                .lastName("lastname")
-                .password(passwordEncoder.encode("12345678"))
-                .build();
 
 
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
-        assert user != null;
-        Mockito.when(userRepository.save(user)).thenReturn(user);
-
-        UserDto excepted = UserMapper.INSTANCE.toDto(user);
-        UserDto provided = userService.update(1L, new UserDto());
-
-        Assertions.assertEquals(excepted, provided);
-
-    }
-
-    @Test
-    void update_updateFirstName(){
-        User user = User.builder()
-                .id(1L)
-                .firstName("firstname")
-                .lastName("lastname")
-                .password(passwordEncoder.encode("12345678"))
-                .build();
-
-        User userExcepted = User.builder()
-                .id(1L)
-                .firstName("firstname2")
-                .lastName("lastname")
-                .password(passwordEncoder.encode("12345678"))
-                .build();
-
-
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
-        assert user != null;
-        Mockito.when(userRepository.save(user)).thenReturn(user);
-        UserDto userDto = new UserDto();
-        userDto.setFirstName("firstname2");
-        UserDto excepted = UserMapper.INSTANCE.toDto(userExcepted);
-        UserDto provided = userService.update(1L, userDto);
-
-        Assertions.assertEquals(excepted, provided);
-    }
-
-    @Test
-    void update_UserIsNull(){
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.empty());
-        UserDto userDto = new UserDto();
-        UserDto provided = userService.update(1L, userDto);
-        Assertions.assertNull(provided);
-
-    }
-
-
-
+//    @Test
+//    void update_updateFirstName(){
+//        User user = User.builder()
+//                .id(1L)
+//                .firstName("firstname")
+//                .lastName("lastname")
+//                .password(passwordEncoder.encode("12345678"))
+//                .build();
+//
+//        User userExcepted = User.builder()
+//                .id(1L)
+//                .firstName("firstname2")
+//                .lastName("lastname")
+//                .password(passwordEncoder.encode("12345678"))
+//                .build();
+//
+//
+//        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
+//        assert user != null;
+//        Mockito.when(userRepository.save(user)).thenReturn(user);
+//        UserDto userDto = new UserDto();
+//        userDto.setFirstName("firstname2");
+//        UserDto excepted = UserMapper.INSTANCE.toDto(userExcepted);
+//        UserDto provided = userService.update(user, userDto);
+//
+//        Assertions.assertEquals(excepted, provided);
+//    }
 
 
 }

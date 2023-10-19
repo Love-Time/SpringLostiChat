@@ -43,7 +43,7 @@ public class WebSocketController {
         }
 
         Dialog dialog = dialogService.addDialogAndGet(dto, user);
-        service.notifyFrontend(dialog);
+        service.notifyMessage(dialog);
     }
 
 

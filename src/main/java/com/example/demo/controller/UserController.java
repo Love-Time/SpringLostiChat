@@ -52,8 +52,9 @@ public class UserController {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
     @PatchMapping("/{id}")
-    public  ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserDto userDTO){
-        return new ResponseEntity<>(userService.update(id, userDTO), HttpStatus.OK);
+    public  ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserDto userDTO, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(userService.update(user, userDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

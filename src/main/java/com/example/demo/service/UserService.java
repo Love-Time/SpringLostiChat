@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,15 +27,9 @@ public class UserService {
         return UserMapper.INSTANCE.toDto(userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not founded")));
     }
 
-    public UserDto update(Long id, UserDto userDTO) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            User newUser = UserMapper.INSTANCE.fromDto(userDTO);
-            user.update(newUser);
-            return UserMapper.INSTANCE.toDto(userRepository.save(user));
-        }
-
-        return null;
+    public UserDto update(User user, UserDto userDTO) {
+        user.update(userDTO);
+        return UserMapper.INSTANCE.toDto(userRepository.save(user));
     }
 
 

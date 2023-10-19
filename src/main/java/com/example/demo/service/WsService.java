@@ -13,13 +13,15 @@ public class WsService {
     @Autowired
     UserRepository userRepository;
 
-    public void notifyFrontend(Dialog dialog) {
-
-
+    public void notifyMessage(Dialog dialog) {
         simpMessagingTemplate.convertAndSendToUser(dialog.getRecipient().getUsername(), "/topic/private-messages", dialog);
     }
 
     public void notifyError(Object object, String username) {
         simpMessagingTemplate.convertAndSendToUser(username, "/topic/private-messages", object);
+    }
+
+    public void notifyFriend(Object object, String username){
+        simpMessagingTemplate.convertAndSendToUser(username, "/topic/friends", object);
     }
 }

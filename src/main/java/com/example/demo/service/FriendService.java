@@ -20,6 +20,8 @@ public class FriendService {
     private FriendRepository repository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FriendNotifyService friendNotifyService;
 
     public List<UserDto> findMyFriends(Long id) {
         List<Friend> friends = repository.findByFirstUserIdOrSecondUserId(id, id);
@@ -54,11 +56,13 @@ public class FriendService {
             repository.save(newFriend);
             //Оповестить по вебсокету, что отправлен запрос в друзья
             //Добавить в уведомления
+            friendNotifyService.notify(FriendStatus.SEND, friendUser);
             return FriendStatus.SEND;
         } else if (friend.getStatus() == FriendStatus.WAIT) { //Принимаем в друзья
             friend.setStatus(FriendStatus.ACCEPT);
             //Оповестить по вебсокету, что мы приняли запрос в друзья
             //Добавить в уведомления
+            friendNotifyService.notify(FriendStatus.ACCEPT, friend.getFirstUser());
             repository.save(friend);
             return FriendStatus.ACCEPT;
 
@@ -67,6 +71,7 @@ public class FriendService {
                 friend.setStatus(FriendStatus.ACCEPT);
                 //Мы передумали и приняли запрос в друзья
                 //Добавить в уведомления
+                friendNotifyService.notify(FriendStatus.ACCEPT, friend.getFirstUser());
                 return FriendStatus.ACCEPT;
             }
         }
@@ -126,14 +131,20 @@ public class FriendService {
         }
         if (friend.getStatus() == FriendStatus.ACCEPT)
         {
+            User notify_to = friend.getFirstUser();
+            if (Objects.equals(user.getId(), notify_to.getId())){
+                notify_to = friend.getSecondUser();
+            }
             repository.delete(friend);
             //Сообщить второму, что первый удалил его из друзей
+            friendNotifyService.notify(FriendStatus.DELETE, notify_to);
             return FriendStatus.DELETE;
 
         }
         if (friend.getStatus() == FriendStatus.WAIT && Objects.equals(friend.getSecondUser().getId(), user.getId())){
             friend.setStatus(FriendStatus.DENY);
-            //Сообщить второму что первый отклонил его заявку
+            //Сообщить первому что второй отклонил его заявку
+            friendNotifyService.notify(FriendStatus.DENY, friend.getFirstUser());
             return FriendStatus.DENY;
         }
         return null; //Остальные случаи, ничего делать не надо
