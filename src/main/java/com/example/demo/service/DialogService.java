@@ -10,10 +10,7 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DialogService {
@@ -22,26 +19,26 @@ public class DialogService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<DialogDto> findMyListOfDialogs(Long id){
+    public List<DialogDto> findMyListOfDialogs(Long id) {
         List<Dialog> message = repository.findDialogsByUserId(id);
-        int lenDialogs =  message.size();
+        int lenDialogs = message.size();
         List<List<Long>> blackList = new ArrayList<>();
         int k = 0;
 
-        for (int i = 0; i<lenDialogs; i++){
+        for (int i = 0; i < lenDialogs; i++) {
             Dialog dialog = message.get(k);
             Long sender_id = dialog.getSender().getId();
             Long recipient_id = dialog.getRecipient().getId();
             List<Long> senderRecipient = Arrays.asList(sender_id, recipient_id);
             List<Long> recipientSender = Arrays.asList(recipient_id, sender_id);
 
-           if (!(blackList.contains(senderRecipient))
-            && !(blackList.contains(recipientSender))){
+            if (!(blackList.contains(senderRecipient))
+                    && !(blackList.contains(recipientSender))) {
                 blackList.add(senderRecipient);
                 k++;
                 continue;
             }
-           message.remove(k);
+            message.remove(k);
         }
 
 
@@ -58,17 +55,28 @@ public class DialogService {
         System.out.println(dialog);
         return repository.save(dialog);
     }
-    public DialogDto addDialogAndGetDto(DialogRequestDto dto, User user){
+
+    public DialogDto addDialogAndGetDto(DialogRequestDto dto, User user) {
         Dialog dialog = addDialogAndGet(dto, user);
         return this.toDto(dialog);
     }
 
-    public DialogDto toDto(Dialog dialog){
+    public DialogDto toDto(Dialog dialog) {
         return DialogMapper.INSTANCE.toDto(repository.save(dialog));
     }
 
 
     public List<DialogDto> findMessagesWithUserById(Long id) {
         return DialogMapper.INSTANCE.toDto(repository.findDialogsBySenderIdOrRecipientId(id, id));
+    }
+
+    public Boolean readDialog(User user, Long dialogId) throws Exception {
+        Dialog dialog = repository.findById(dialogId).orElseThrow(() -> new Exception("DialogDoesNotExists"));
+        if (Objects.equals(dialog.getRecipient().getId(), user.getId())) {
+            dialog.setIsRead(true);
+            repository.save(dialog);
+            return true;
+        }
+        return false;
     }
 }

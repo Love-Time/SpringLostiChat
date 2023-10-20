@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.dialog.DialogDto;
+import com.example.demo.dto.dialog.DialogReadDto;
 import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
@@ -38,6 +39,13 @@ public class WebSocketController {
         System.out.println(user);
         Dialog dialog = dialogService.addDialogAndGet(dto, user);
         service.notifyMessage(dialog);
+    }
+
+    @MessageMapping("/private-messages/read")
+    @SendToUser("/topic/private-messages/read.")
+    public Boolean readDialog(@RequestBody @Valid DialogReadDto dialogReadDto, Authentication authentication) throws Exception {
+        User user = (User) authentication.getPrincipal();
+        return dialogService.readDialog(user, dialogReadDto.getDialogId());
     }
 
 
