@@ -23,6 +23,7 @@ public class AuthenticationRegisterRequestDto {
     @Email(message = "email should be valid")
     private String email;
 
+    @NotEmpty(message = "password should not be empty")
     @Size(min = 8, max = 30, message = "password length should be between 8 and 30")
     private String password;
 

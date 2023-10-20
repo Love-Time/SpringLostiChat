@@ -5,7 +5,7 @@ import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 
-import com.example.demo.service.BindingErrorsService;
+
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -64,12 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<UserDto> changePassword(@RequestBody @Valid  ChangePasswordDto passwordDto, BindingResult result, Authentication authentication){
-        if (result.hasErrors()) {
-            UserDto userDto = new UserDto();
-            userDto.setErrors(BindingErrorsService.getErrors(result));
-            return new ResponseEntity<>(userDto, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<UserDto> changePassword(@RequestBody @Valid  ChangePasswordDto passwordDto, Authentication authentication){
         User user = (User)authentication.getPrincipal();
 
         if (!Objects.equals(passwordEncoder.encode(passwordDto.getOldPassword()), user.getPassword())){

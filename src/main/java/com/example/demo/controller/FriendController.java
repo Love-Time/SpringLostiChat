@@ -6,14 +6,12 @@ import com.example.demo.dto.friend.FriendDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.FriendStatus;
 import com.example.demo.entity.User;
-import com.example.demo.service.BindingErrorsService;
 import com.example.demo.service.FriendService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -62,15 +60,7 @@ public class FriendController {
     }
 
     @PostMapping("")
-    public  ResponseEntity<FriendDto> addFriend(@RequestBody @Valid FriendAddRequestDto friendAddRequestDto, BindingResult result, Authentication authentication) throws Exception {
-        if (result.hasErrors()) {
-            FriendDto friendDto = FriendDto.builder()
-                    .errors(BindingErrorsService.getErrors(result))
-                    .build();
-
-            return new ResponseEntity<>(friendDto, HttpStatus.BAD_REQUEST);
-        }
-
+    public  ResponseEntity<FriendDto> addFriend(@RequestBody @Valid FriendAddRequestDto friendAddRequestDto, Authentication authentication) throws Exception {
         User user = (User)authentication.getPrincipal();
         FriendStatus status = service.addFriend(user,friendAddRequestDto.getUserId());
         if (status == null) {

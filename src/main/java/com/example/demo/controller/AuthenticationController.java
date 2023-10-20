@@ -6,14 +6,13 @@ import com.example.demo.dto.authentication.AuthenticationResponseDto;
 import com.example.demo.dto.authentication.AuthenticationRegisterRequestDto;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.AuthenticationService;
-import com.example.demo.service.BindingErrorsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,38 +31,17 @@ public class AuthenticationController {
     private final UserDetailsService userDetailsService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDto> register(
-            @RequestBody @Valid AuthenticationRegisterRequestDto request, BindingResult result
-    ) {
-        if (result.hasErrors()) {
-            AuthenticationResponseDto response = new AuthenticationResponseDto();
-            response.setErrors(BindingErrorsService.getErrors(result));
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody @Valid AuthenticationRegisterRequestDto request) {
         return ResponseEntity.ok(service.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseDto> authentication(
-            @RequestBody @Valid AuthenticationRequestDto request, BindingResult result
-    ) {
-        if (result.hasErrors()) {
-            AuthenticationResponseDto response = new AuthenticationResponseDto();
-            response.setErrors(BindingErrorsService.getErrors(result));
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-
+    public ResponseEntity<AuthenticationResponseDto> authentication(@RequestBody @Valid AuthenticationRequestDto request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponseDto> updateAccessToken(@RequestBody @Valid AuthenticationRefreshRequestDto refreshRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            AuthenticationResponseDto response = new AuthenticationResponseDto();
-            response.setErrors(BindingErrorsService.getErrors(result));
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<AuthenticationResponseDto> updateAccessToken(@RequestBody @Valid AuthenticationRefreshRequestDto refreshRequest) {
         String userEmail = jwtService.extractUsername(refreshRequest.getRefreshToken());
         if (userEmail != null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
