@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public UserDto findById(Long id){
-        return UserMapper.INSTANCE.toDto(userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not founded")));
+        return UserMapper.INSTANCE.toDto(userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
 
     public UserDto update(User user, UserDto userDTO) {

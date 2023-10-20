@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -41,13 +42,11 @@ public class FriendService {
         return repository.IsMyFriend(myId, FriendId);
     }
 
-    public FriendStatus addFriend(User user, Long friendId) throws Exception {
+    public FriendStatus addFriend(User user, Long friendId) {
         Friend friend = repository.findFriend(user.getId(), friendId).orElse(null);
         if (friend == null) { //Отправка запроса в друзья
-            User friendUser = userRepository.findById(friendId).orElse(null);
-            if (friendUser == null) {
-                throw new Exception("friend should be exists");
-            }
+            User friendUser = userRepository.findById(friendId).orElseThrow(() -> new NoSuchElementException("Friend not found"));
+
             Friend newFriend = Friend.builder()
                     .firstUser(user)
                     .status(FriendStatus.WAIT)
@@ -125,10 +124,7 @@ public class FriendService {
     }
 
     public FriendStatus denyFriend(User user, Long id) {
-        Friend friend = repository.findFriend(user.getId(), id).orElse(null);
-        if (friend == null) {
-            return null; //Некому отклонять запрос, запроса нет
-        }
+        Friend friend = repository.findFriend(user.getId(), id).orElseThrow(() -> new NoSuchElementException("User not found"));
         if (friend.getStatus() == FriendStatus.ACCEPT)
         {
             User notify_to = friend.getFirstUser();

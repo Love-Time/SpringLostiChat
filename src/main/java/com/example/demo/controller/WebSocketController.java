@@ -36,16 +36,17 @@ public class WebSocketController {
     @SendToUser("/topic/private-messages")
     public void sendDialog(@RequestBody @Valid DialogRequestDto dto, Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        System.out.println(user);
         Dialog dialog = dialogService.addDialogAndGet(dto, user);
         service.notifyMessage(dialog);
     }
 
     @MessageMapping("/private-messages/read")
-    @SendToUser("/topic/private-messages/read.")
-    public Boolean readDialog(@RequestBody @Valid DialogReadDto dialogReadDto, Authentication authentication) throws Exception {
+    @SendToUser("/topic/private-messages/read")
+    public DialogReadDto readDialog(@RequestBody @Valid DialogReadDto dialogReadDto, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return dialogService.readDialog(user, dialogReadDto.getDialogId());
+        Dialog dialog = dialogService.readDialog(user, dialogReadDto.getDialogId());
+        service.notifyDialogRead(dialogReadDto, dialog.getSender().getUsername());
+        return dialogReadDto;
     }
 
 

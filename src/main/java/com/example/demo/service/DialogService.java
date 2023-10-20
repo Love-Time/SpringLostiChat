@@ -9,6 +9,7 @@ import com.example.demo.repository.DialogRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
 
@@ -48,7 +49,7 @@ public class DialogService {
     public Dialog addDialogAndGet(DialogRequestDto dto, User user) {
         Dialog dialog = DialogMapper.INSTANCE.fromDto(dto);
         dialog.setSender(user);
-        User recipient = userRepository.findById(dto.getRecipient_id()).orElse(null);
+        User recipient = userRepository.findById(dto.getRecipient_id()).orElseThrow(()-> new NoSuchElementException("Recipient not found"));
         dialog.setRecipient(recipient);
         dialog.setDateTime(new Date());
         dialog.setIsRead(false);
@@ -68,15 +69,17 @@ public class DialogService {
 
     public List<DialogDto> findMessagesWithUserById(Long id) {
         return DialogMapper.INSTANCE.toDto(repository.findDialogsBySenderIdOrRecipientId(id, id));
+
     }
 
-    public Boolean readDialog(User user, Long dialogId) throws Exception {
-        Dialog dialog = repository.findById(dialogId).orElseThrow(() -> new Exception("DialogDoesNotExists"));
+    public Dialog readDialog(User user, Long dialogId) {
+        Dialog dialog = repository.findById(dialogId).orElseThrow(() -> new NoSuchElementException("Message not found"));
         if (Objects.equals(dialog.getRecipient().getId(), user.getId())) {
             dialog.setIsRead(true);
             repository.save(dialog);
-            return true;
+            return dialog;
+
         }
-        return false;
+        throw new SecurityException("You don't have access to this object");
     }
 }

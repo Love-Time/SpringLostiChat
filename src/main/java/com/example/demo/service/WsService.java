@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.dialog.DialogDto;
+import com.example.demo.dto.dialog.DialogReadDto;
 import com.example.demo.dto.friend.FriendNotifyDto;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.FriendNotify;
@@ -19,13 +20,11 @@ public class WsService {
     UserRepository userRepository;
 
     public void notifyMessage(Dialog dialog) {
-        System.out.println("FGGKFJGIFJGOIFJ");
         DialogDto dto = DialogMapper.INSTANCE.toDto(dialog);
         simpMessagingTemplate.convertAndSendToUser(dialog.getRecipient().getUsername(), "/topic/private-messages", dto);
     }
-
-    public void notifyError(Object object, String username) {
-        simpMessagingTemplate.convertAndSendToUser(username, "/topic/private-messages", object);
+    public void notifyDialogRead(DialogReadDto dto, String username){
+        simpMessagingTemplate.convertAndSendToUser(username, "/topic/private-messages/read", dto);
     }
 
     public void notifyFriend(FriendNotifyDto dto, String username){
