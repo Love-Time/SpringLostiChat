@@ -48,7 +48,7 @@ function disconnect() {
 function sendName() {
     stompClient.publish({
         destination: "/app/private-messages",
-        body: JSON.stringify({'name': $("#name").val(), "to": $("#to").val() })
+        body: JSON.stringify({'message': $("#name").val(), "recipient_id": $("#to").val() })
     });
 
 }

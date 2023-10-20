@@ -33,15 +33,9 @@ public class WebSocketController {
 
     @MessageMapping("/private-messages")
     @SendToUser("/topic/private-messages")
-    public void sendDialog(@RequestBody @Valid DialogRequestDto dto, BindingResult result, Authentication authentication){
+    public void sendDialog(@RequestBody @Valid DialogRequestDto dto, Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        if (result.hasErrors()) {
-            DialogDto dialogDto = new DialogDto();
-            dialogDto.setErrors(BindingErrorsService.getErrors(result));
-            service.notifyError(dialogDto, user.getUsername());
-
-        }
-
+        System.out.println(user);
         Dialog dialog = dialogService.addDialogAndGet(dto, user);
         service.notifyMessage(dialog);
     }

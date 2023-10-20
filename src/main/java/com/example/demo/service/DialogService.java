@@ -6,6 +6,7 @@ import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.DialogMapper;
 import com.example.demo.repository.DialogRepository;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class DialogService {
     @Autowired
     private DialogRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<DialogDto> findMyListOfDialogs(Long id){
         List<Dialog> message = repository.findDialogsByUserId(id);
@@ -48,8 +51,7 @@ public class DialogService {
     public Dialog addDialogAndGet(DialogRequestDto dto, User user) {
         Dialog dialog = DialogMapper.INSTANCE.fromDto(dto);
         dialog.setSender(user);
-        User recipient = User.builder().id(dto.getRecipient_id())
-        .build();
+        User recipient = userRepository.findById(dto.getRecipient_id()).orElse(null);
         dialog.setRecipient(recipient);
         dialog.setDateTime(new Date());
         dialog.setIsRead(false);

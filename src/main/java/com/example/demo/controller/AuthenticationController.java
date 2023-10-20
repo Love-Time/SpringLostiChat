@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.demo.dto.authentication.AuthenticationRefreshRequestDto;
 import com.example.demo.dto.authentication.AuthenticationRequestDto;
 import com.example.demo.dto.authentication.AuthenticationResponseDto;
@@ -13,11 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.SocketOption;
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +36,7 @@ public class AuthenticationController {
     private final UserDetailsService userDetailsService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody @Valid AuthenticationRegisterRequestDto request) {
+    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody @Valid AuthenticationRegisterRequestDto request, BindingResult result) {
         return ResponseEntity.ok(service.register(request));
     }
 

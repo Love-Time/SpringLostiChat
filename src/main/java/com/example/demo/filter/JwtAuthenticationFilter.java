@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
         if (Objects.equals(request.getRequestURI(), "/chat")){
+            System.out.println("ffffffffffffffffff");
             String tokenParam = request.getParameter("token");
             if (Objects.equals(tokenParam, "")){
                 System.out.println("HEREEEEEE");
