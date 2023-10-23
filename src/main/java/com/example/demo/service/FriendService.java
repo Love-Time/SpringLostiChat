@@ -4,6 +4,7 @@ import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.Friend;
 import com.example.demo.entity.FriendStatus;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.FriendRepository;
 import com.example.demo.repository.UserRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -42,10 +42,10 @@ public class FriendService {
         return repository.IsMyFriend(myId, FriendId);
     }
 
-    public FriendStatus addFriend(User user, Long friendId) {
+    public FriendStatus addFriend(User user, Long friendId) throws ObjectNotFoundException {
         Friend friend = repository.findFriend(user.getId(), friendId).orElse(null);
         if (friend == null) { //Отправка запроса в друзья
-            User friendUser = userRepository.findById(friendId).orElseThrow(() -> new NoSuchElementException("Friend not found"));
+            User friendUser = userRepository.findById(friendId).orElseThrow(() -> new ObjectNotFoundException("Friend not found"));
 
             Friend newFriend = Friend.builder()
                     .firstUser(user)
@@ -123,8 +123,8 @@ public class FriendService {
         return UserMapper.INSTANCE.toDto(response);
     }
 
-    public FriendStatus denyFriend(User user, Long id) {
-        Friend friend = repository.findFriend(user.getId(), id).orElseThrow(() -> new NoSuchElementException("User not found"));
+    public FriendStatus denyFriend(User user, Long id) throws ObjectNotFoundException {
+        Friend friend = repository.findFriend(user.getId(), id).orElseThrow(() -> new ObjectNotFoundException("User not found"));
         if (friend.getStatus() == FriendStatus.ACCEPT)
         {
             User notify_to = friend.getFirstUser();

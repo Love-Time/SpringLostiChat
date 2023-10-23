@@ -3,6 +3,7 @@ package com.example.demo.advice;
 
 
 import com.example.demo.service.BindingErrorsService;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.NoSuchElementException;
 
 
 @ControllerAdvice
@@ -38,14 +38,14 @@ public class DefaultAdvice  {
         return new IncorrectDataResponse(BindingErrorsService.getErrors(ex.getBindingResult().getFieldErrors()));
     }
 
-    @MessageExceptionHandler(NoSuchElementException.class)
+    @MessageExceptionHandler(ObjectNotFoundException.class)
     @SendToUser("/topic/private-messages")
-    public Response NoSuchElementWebSocketExceptionHandler(NoSuchElementException ex) {
+    public Response ObjectNotFoundWebSocketExceptionHandler(ObjectNotFoundException ex) {
         return new Response(ex.getMessage());
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Response> NoSuchElementExceptionHandler(NoSuchElementException ex) {
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<Response> ObjectNotFoundExceptionHandler(ObjectNotFoundException ex) {
         Response response = new Response(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

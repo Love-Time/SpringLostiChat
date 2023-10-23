@@ -4,6 +4,7 @@ import com.example.demo.dto.dialog.DialogDto;
 import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.mapper.DialogMapper;
 import com.example.demo.repository.DialogRepository;
 import com.example.demo.repository.UserRepository;
@@ -46,10 +47,10 @@ public class DialogService {
         return DialogMapper.INSTANCE.toDto(message);
     }
 
-    public Dialog addDialogAndGet(DialogRequestDto dto, User user) {
+    public Dialog addDialogAndGet(DialogRequestDto dto, User user) throws ObjectNotFoundException {
         Dialog dialog = DialogMapper.INSTANCE.fromDto(dto);
         dialog.setSender(user);
-        User recipient = userRepository.findById(dto.getRecipient_id()).orElseThrow(()-> new NoSuchElementException("Recipient not found"));
+        User recipient = userRepository.findById(dto.getRecipient_id()).orElseThrow(()-> new ObjectNotFoundException("Recipient not found"));
         dialog.setRecipient(recipient);
         dialog.setDateTime(new Date());
         dialog.setIsRead(false);
@@ -57,7 +58,7 @@ public class DialogService {
         return repository.save(dialog);
     }
 
-    public DialogDto addDialogAndGetDto(DialogRequestDto dto, User user) {
+    public DialogDto addDialogAndGetDto(DialogRequestDto dto, User user) throws ObjectNotFoundException {
         Dialog dialog = addDialogAndGet(dto, user);
         return this.toDto(dialog);
     }
@@ -72,8 +73,8 @@ public class DialogService {
 
     }
 
-    public Dialog readDialog(User user, Long dialogId) {
-        Dialog dialog = repository.findById(dialogId).orElseThrow(() -> new NoSuchElementException("Message not found"));
+    public Dialog readDialog(User user, Long dialogId) throws ObjectNotFoundException {
+        Dialog dialog = repository.findById(dialogId).orElseThrow(() -> new ObjectNotFoundException("Message not found"));
         if (Objects.equals(dialog.getRecipient().getId(), user.getId())) {
             dialog.setIsRead(true);
             repository.save(dialog);

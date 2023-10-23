@@ -6,6 +6,7 @@ import com.example.demo.dto.friend.FriendDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.entity.FriendStatus;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.service.FriendService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class FriendController {
 
     //Отказ на заявку или удаление из друзей
     @DeleteMapping("/{id}/deny")
-    public ResponseEntity<FriendDto> denyFriend(@PathVariable Long id, Authentication authentication){
+    public ResponseEntity<FriendDto> denyFriend(@PathVariable Long id, Authentication authentication) throws ObjectNotFoundException {
         User user = (User)authentication.getPrincipal();
         FriendStatus status = service.denyFriend(user, id);
         if (status == null){

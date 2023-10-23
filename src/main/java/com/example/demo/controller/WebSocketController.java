@@ -5,6 +5,7 @@ import com.example.demo.dto.dialog.DialogReadDto;
 import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.service.BindingErrorsService;
 import com.example.demo.service.DialogService;
 import com.example.demo.service.WsService;
@@ -34,7 +35,7 @@ public class WebSocketController {
 
     @MessageMapping("/private-messages")
     @SendToUser("/topic/private-messages")
-    public void sendDialog(@RequestBody @Valid DialogRequestDto dto, Authentication authentication){
+    public void sendDialog(@RequestBody @Valid DialogRequestDto dto, Authentication authentication) throws ObjectNotFoundException {
         User user = (User) authentication.getPrincipal();
         Dialog dialog = dialogService.addDialogAndGet(dto, user);
         service.notifyMessage(dialog);
@@ -42,7 +43,7 @@ public class WebSocketController {
 
     @MessageMapping("/private-messages/read")
     @SendToUser("/topic/private-messages/read")
-    public DialogReadDto readDialog(@RequestBody @Valid DialogReadDto dialogReadDto, Authentication authentication) {
+    public DialogReadDto readDialog(@RequestBody @Valid DialogReadDto dialogReadDto, Authentication authentication) throws ObjectNotFoundException {
         User user = (User) authentication.getPrincipal();
         Dialog dialog = dialogService.readDialog(user, dialogReadDto.getDialogId());
         service.notifyDialogRead(dialogReadDto, dialog.getSender().getUsername());

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.dialog.DialogDto;
 import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.service.DialogService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class DialogController {
 
     // Позже переделать на вебсокеты
     @PostMapping("")
-    public ResponseEntity<DialogDto> addDialog(@RequestBody @Valid DialogRequestDto dto, Authentication authentication){
+    public ResponseEntity<DialogDto> addDialog(@RequestBody @Valid DialogRequestDto dto, Authentication authentication) throws ObjectNotFoundException {
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(dialogService.addDialogAndGetDto(dto, user), HttpStatus.OK);
     }
