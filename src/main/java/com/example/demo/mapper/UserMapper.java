@@ -19,4 +19,5 @@ public interface UserMapper {
     User fromDto(UserResponseDto dto);
 
 
+    List<User> fromDto(List<UserDto> myFriends);
 }
