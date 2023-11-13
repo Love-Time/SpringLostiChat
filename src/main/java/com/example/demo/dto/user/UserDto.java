@@ -15,6 +15,4 @@ public class UserDto {
     private String firstName;
     private String lastName;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private Map<String, String> errors;
 }

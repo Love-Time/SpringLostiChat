@@ -21,11 +21,11 @@ public class DefaultAdvice  {
         IncorrectDataResponse incorrectDataResponse = new IncorrectDataResponse(BindingErrorsService.getErrors(ex.getFieldErrors()));
         return new ResponseEntity<>(incorrectDataResponse, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(value = {Exception.class})
-    public ResponseEntity<Response> handleAllExceptions(Exception ex) {
-        Response response = new Response(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(value = {Exception.class})
+//    public ResponseEntity<Response> handleAllExceptions(Exception ex) {
+//        Response response = new Response(ex.getMessage());
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
 
 
     @MessageExceptionHandler(org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException.class)

@@ -42,6 +42,7 @@ public class UserController {
     public ResponseEntity<UserDto> me(Authentication authentication){
         User user = (User) authentication.getPrincipal();
         UserDto userDto = UserMapper.INSTANCE.toDto(user);
+        System.out.println(userDto);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
     @GetMapping("/{id}")
@@ -70,7 +71,7 @@ public class UserController {
             UserDto userDto = new UserDto();
             Map<String, String> errors = new HashMap<>();
             errors.put("oldPassword", "oldPassword must match the current password");
-            userDto.setErrors(errors);
+//            userDto.setErrors(errors); need fix
         }
 
 

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.dialog.DialogDto;
 import com.example.demo.dto.dialog.DialogRequestDto;
+import com.example.demo.dto.dialog.DialogView;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ObjectNotFoundException;
@@ -9,9 +10,12 @@ import com.example.demo.mapper.DialogMapper;
 import com.example.demo.repository.DialogRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -21,30 +25,10 @@ public class DialogService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<DialogDto> findMyListOfDialogs(Long id) {
-        List<Dialog> message = repository.findDialogsByUserId(id);
-        int lenDialogs = message.size();
-        List<List<Long>> blackList = new ArrayList<>();
-        int k = 0;
+    public List<DialogDto> findMyListOfDialogs(Long id) throws SQLException {
+        List<DialogView> message = repository.findDialogsByUserId(id);
 
-        for (int i = 0; i < lenDialogs; i++) {
-            Dialog dialog = message.get(k);
-            Long sender_id = dialog.getSender().getId();
-            Long recipient_id = dialog.getRecipient().getId();
-            List<Long> senderRecipient = Arrays.asList(sender_id, recipient_id);
-            List<Long> recipientSender = Arrays.asList(recipient_id, sender_id);
-
-            if (!(blackList.contains(senderRecipient))
-                    && !(blackList.contains(recipientSender))) {
-                blackList.add(senderRecipient);
-                k++;
-                continue;
-            }
-            message.remove(k);
-        }
-
-
-        return DialogMapper.INSTANCE.toDto(message);
+        return DialogMapper.INSTANCE.toDtoFromView(message);
     }
 
     public Dialog addDialogAndGet(DialogRequestDto dto, User user) throws ObjectNotFoundException {
