@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+
+import com.example.demo.dto.common.Page;
 import com.example.demo.dto.dialog.DialogDto;
+import com.example.demo.dto.dialog.DialogListPageResponse;
 import com.example.demo.dto.dialog.DialogRequestDto;
-import com.example.demo.dto.dialog.DialogView;
 import com.example.demo.entity.Dialog;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ObjectNotFoundException;
@@ -10,11 +12,10 @@ import com.example.demo.mapper.DialogMapper;
 import com.example.demo.repository.DialogRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.sql.ResultSet;
+import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -25,10 +26,20 @@ public class DialogService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<DialogDto> findMyListOfDialogs(Long id) throws SQLException {
-        List<DialogView> message = repository.findDialogsByUserId(id);
+    public DialogListPageResponse findMyListOfDialogs(Long id, Pageable pageable) throws SQLException {
+        var dto = repository.findDialogsByUserId(id, pageable);
+        DialogListPageResponse ret = DialogListPageResponse.builder()
+                .page(Page.builder()
+                        .totalPages(dto.getTotalPages())
+                        .number(dto.getNumber())
+                        .size(dto.getSize())
+                        .build())
+                .data(dto.get()
+                        .map(DialogMapper.INSTANCE::toDto)
+                        .toList())
+                .build();
+        return ret;
 
-        return DialogMapper.INSTANCE.toDtoFromView(message);
     }
 
     public Dialog addDialogAndGet(DialogRequestDto dto, User user) throws ObjectNotFoundException {
@@ -52,8 +63,20 @@ public class DialogService {
     }
 
 
-    public List<DialogDto> findMessagesWithUserById(Long id) {
-        return DialogMapper.INSTANCE.toDto(repository.findDialogsBySenderIdOrRecipientId(id, id));
+    public DialogListPageResponse findMessagesWithUserById(Long id, Pageable pageable) {
+        var dto = repository.findDialogsBySenderIdOrRecipientId(id, id, pageable);
+        DialogListPageResponse ret = DialogListPageResponse.builder()
+                .page(Page.builder()
+                        .totalPages(dto.getTotalPages())
+                        .number(dto.getNumber())
+                        .size(dto.getSize())
+                        .build())
+                .data(dto.get()
+                        .map(DialogMapper.INSTANCE::toDto)
+                        .toList())
+                .build();
+
+        return ret;
 
     }
 

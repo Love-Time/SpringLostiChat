@@ -7,6 +7,7 @@ import com.example.demo.entity.Dialog;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+
 import java.util.List;
 
 @Mapper
@@ -19,6 +20,6 @@ public interface DialogMapper {
 
     Dialog fromDto(DialogRequestDto dialogDtoRequest);
 
-    List<DialogDto> toDtoFromView(List<DialogView> dialogs);
 
+    DialogDto toDto(DialogView dialogView);
 }

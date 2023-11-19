@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.dialog.DialogDto;
+import com.example.demo.dto.dialog.DialogListPageResponse;
 import com.example.demo.dto.dialog.DialogRequestDto;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.service.DialogService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,9 +26,11 @@ public class DialogController {
     private DialogService dialogService;
 
     @GetMapping("")
-    public ResponseEntity<List<DialogDto>> getDialogs(Authentication authentication) throws SQLException {
+    public ResponseEntity<DialogListPageResponse> getDialogs(@RequestParam(defaultValue = "30") int size,
+                                                             @RequestParam(defaultValue = "0") int page,Authentication authentication) throws SQLException {
         User user = (User) authentication.getPrincipal();
-        return new ResponseEntity<>(dialogService.findMyListOfDialogs(user.getId()), HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseEntity<>(dialogService.findMyListOfDialogs(user.getId(), pageable), HttpStatus.OK);
     }
 
     // Позже переделать на вебсокеты
@@ -36,8 +41,12 @@ public class DialogController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<DialogDto>> getMessagesWithUser(@PathVariable Long id){
-        return new ResponseEntity<>(dialogService.findMessagesWithUserById(id), HttpStatus.OK);
+    public ResponseEntity<DialogListPageResponse> getMessagesWithUser(@RequestParam(defaultValue = "30") int size,
+                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                      @PathVariable Long id){
+        Pageable pageable = PageRequest.of(page, size);
+
+        return new ResponseEntity<>(dialogService.findMessagesWithUserById(id, pageable), HttpStatus.OK);
     }
 
 
