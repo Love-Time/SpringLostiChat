@@ -28,6 +28,7 @@ public class FriendService {
         List<Friend> friends = repository.findByFirstUserIdOrSecondUserId(id, id);
         List<User> response = new ArrayList<>();
         for (Friend friend : friends) {
+            if (friend.getStatus() != FriendStatus.ACCEPT){continue;}
             if (Objects.equals(friend.getFirstUser().getId(), id)) {
                 response.add(friend.getSecondUser());
             } else {
